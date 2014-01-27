@@ -13,8 +13,6 @@ import java.io.PrintWriter;
  */
 public class WelcomeServlet extends HttpServlet {
 
-    public static final int WEEKS_AHEAD = 13;
-
     private ReportCreator reportCreator = new ReportCreator();
 
     @Override
@@ -23,7 +21,7 @@ public class WelcomeServlet extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
 
         try (PrintWriter out = resp.getWriter()) {
-            String report = reportCreator.createReport(WEEKS_AHEAD);
+            String report = reportCreator.createReport();
             out.write(report);
         }
     }

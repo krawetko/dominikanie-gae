@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MeetingsScheduleRetriever implements Serializable {
     public MeetingsScheduleRetriever() {
@@ -15,8 +17,8 @@ public class MeetingsScheduleRetriever implements Serializable {
 
     private DatesGenerator datesGenerator = new DatesGenerator();
 
-    public Map<String, String> getMeetingsForGivenWeaksAhead(int weaksAhead) throws IOException {
-        List<String> fridayDates = datesGenerator.getFridayDates(weaksAhead);
+    public Map<String, String> getMeetingsForGivenWeaksAhead() throws IOException {
+        List<String> fridayDates = datesGenerator.getFridayDates();
         Map<String, String> scheduleByDay = new LinkedHashMap<>();
 
         for (String fridayDate : fridayDates) {
@@ -32,8 +34,7 @@ public class MeetingsScheduleRetriever implements Serializable {
         URL url = new URL(urlString);
         URLConnection conn = url.openConnection();
         try (InputStream is = conn.getInputStream()) {
-            String webPage = IOUtils.toString(is, "iso-8859-2");
-            return webPage;
+            return IOUtils.toString(is, "iso-8859-2");
         }
     }
 

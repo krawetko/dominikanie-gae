@@ -12,7 +12,6 @@ import java.io.IOException;
  */
 public class DailyRaport extends HttpServlet {
 
-    public static final int WEEKS_AHEAD = 13;
     private final ReportCreator reportCreator = new ReportCreator();
     private EmailSender emailSender = new EmailSender();
 
@@ -21,7 +20,7 @@ public class DailyRaport extends HttpServlet {
 
         resp.setContentType("text/html; charset=UTF-8");
 
-        String report = reportCreator.createReport(WEEKS_AHEAD);
+        String report = reportCreator.createReport();
 
         emailSender.sendDominikanskiEmail("Raport dnia", report, "krawetko@gmail.com", "kolasinska.magda@gmail.com");
     }

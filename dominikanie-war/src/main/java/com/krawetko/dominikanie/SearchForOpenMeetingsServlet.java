@@ -1,7 +1,6 @@
 package com.krawetko.dominikanie;
 
 import org.joda.time.LocalTime;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -10,17 +9,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +27,6 @@ import java.util.logging.Logger;
  */
 public class SearchForOpenMeetingsServlet extends HttpServlet {
 
-    private static final int WEEKS_AHEAD = 13;
     private MeetingsScheduleRetriever meetingsScheduleRetriever = new MeetingsScheduleRetriever();
     private EmailSender emailSender = new EmailSender();
 
@@ -41,22 +36,20 @@ public class SearchForOpenMeetingsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
 
-        Map<String, String> meetings = meetingsScheduleRetriever.getMeetingsForGivenWeaksAhead(WEEKS_AHEAD);
+        Map<String, String> meetings = meetingsScheduleRetriever.getMeetingsForGivenWeaksAhead();
 
         try {
             Map<String, String> openedMeetingsByWeeks = getOpenDates(meetings);
             if (!openedMeetingsByWeeks.isEmpty()) {
-                try (PrintWriter out = resp.getWriter()) {
-                    StringBuilder openMeetingsRaport = new StringBuilder();
-                    for (Map.Entry<String, String> openedMeetingsByWeek : openedMeetingsByWeeks.entrySet()) {
-                        openMeetingsRaport.append(String.format("Wolne terminy w dniu <b>%s</b>:<br/>", openedMeetingsByWeek.getKey()));
-                        openMeetingsRaport.append(openedMeetingsByWeek.getValue());
-                        openMeetingsRaport.append("<br/>");
-                        openMeetingsRaport.append(createReservationLink(openedMeetingsByWeek.getKey()));
-                        openMeetingsRaport.append("<br/><br/>");
-                    }
-                    emailSender.sendDominikanskiEmail("Wolne terminy!!!", openMeetingsRaport.toString(), "krawetko@gmail.com", "kolasinska.magda@gmail.com");
+                StringBuilder openMeetingsRaport = new StringBuilder();
+                for (Map.Entry<String, String> openedMeetingsByWeek : openedMeetingsByWeeks.entrySet()) {
+                    openMeetingsRaport.append(String.format("Wolne terminy w dniu <b>%s</b>:<br/>", openedMeetingsByWeek.getKey()));
+                    openMeetingsRaport.append(openedMeetingsByWeek.getValue());
+                    openMeetingsRaport.append("<br/>");
+                    openMeetingsRaport.append(createReservationLink(openedMeetingsByWeek.getKey()));
+                    openMeetingsRaport.append("<br/><br/>");
                 }
+                emailSender.sendDominikanskiEmail("Wolne terminy!!!", openMeetingsRaport.toString(), "krawetko@gmail.com", "kolasinska.magda@gmail.com");
             } else {
                 if (new LocalTime().getHourOfDay() % 10 == 0) {
                     emailSender.sendDominikanskiEmail("Dzialam", "dzialam", "krawetko@gmail.com");

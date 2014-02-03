@@ -49,7 +49,7 @@ public class SearchForOpenMeetingsServlet extends HttpServlet {
                     openMeetingsRaport.append(createReservationLink(openedMeetingsByWeek.getKey()));
                     openMeetingsRaport.append("<br/><br/>");
                 }
-                emailSender.sendDominikanskiEmail("Wolne terminy!!!", openMeetingsRaport.toString(), "krawetko@gmail.com", "kolasinska.magda@gmail.com");
+                emailSender.sendDominikanskiEmail("Wolne terminy!!!", openMeetingsRaport.toString(), "j.kubow@gmail.com", "dowlika@gmail.com");
             } else {
                 if (new LocalTime().getHourOfDay() % 10 == 0) {
                     emailSender.sendDominikanskiEmail("Dzialam", "dzialam", "krawetko@gmail.com");

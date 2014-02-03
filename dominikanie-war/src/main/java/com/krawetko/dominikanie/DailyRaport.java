@@ -22,7 +22,7 @@ public class DailyRaport extends HttpServlet {
 
         String report = reportCreator.createReport();
 
-        emailSender.sendDominikanskiEmail("Raport dnia", report, "krawetko@gmail.com", "kolasinska.magda@gmail.com");
+        emailSender.sendDominikanskiEmail("Raport dnia", report, "j.kubow@gmail.com", "dowlika@gmail.com");
     }
 
 }

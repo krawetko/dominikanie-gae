@@ -35,6 +35,7 @@ public class SearchForOpenMeetingsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
+        String sendToKubow = req.getParameter("kubow");
 
         Map<String, String> meetings = meetingsScheduleRetriever.getMeetingsForGivenWeaksAhead();
 
@@ -49,10 +50,15 @@ public class SearchForOpenMeetingsServlet extends HttpServlet {
                     openMeetingsRaport.append(createReservationLink(openedMeetingsByWeek.getKey()));
                     openMeetingsRaport.append("<br/><br/>");
                 }
-                emailSender.sendDominikanskiEmail("Wolne terminy!!!", openMeetingsRaport.toString(), "j.kubow@gmail.com", "dowlika@gmail.com");
+                if (sendToKubow != null) {
+                    emailSender.sendDominikanskiEmail("Wolne terminy!!!", openMeetingsRaport.toString(), "j.kubow@gmail.com", "dowlika@gmail.com");
+                } else {
+                    emailSender.sendDominikanskiEmail("Wolne terminy!!!", openMeetingsRaport.toString(), "krawetko@gmail.com");
+                }
+
             } else {
-                if (new LocalTime().getHourOfDay() % 10 == 0) {
-                    emailSender.sendDominikanskiEmail("Dzialam", "dzialam", "krawetko@gmail.com");
+                if (new LocalTime().getHourOfDay() == 23) {
+//                    emailSender.sendDominikanskiEmail("Dzialam", "dzialam", "krawetko@gmail.com");
                 }
             }
         } catch (XPathExpressionException e) {

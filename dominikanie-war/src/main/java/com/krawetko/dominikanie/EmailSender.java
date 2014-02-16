@@ -6,6 +6,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +39,7 @@ public class EmailSender {
             msg.setContent(message, "text/html");
 
             Transport.send(msg);
-            logger.info("Email sent");
+            logger.info("Email sent to: " + Arrays.toString(recipients));
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
